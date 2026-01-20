@@ -63,17 +63,16 @@ client.on(Events.MessageCreate, async (message) => {
 				.setEmoji('🎲');
 
 			// Рендер компонентов
-			const actionRow1 = new ActionRowBuilder().addComponents(selectMenu);
-			const actionRow2 = new ActionRowBuilder().addComponents(button);
+			const actionRow = new ActionRowBuilder().addComponents(selectMenu, button);
 
 			// Слушатель события
 			await message.channel.send({
 				embeds: [rndEmbed],
-				components: [actionRow1, actionRow2],
+				components: [actionRow],
 			});
 		} catch (error) {
 			console.error('Ошибка отправки сообщения: ', error);
-			await message.reply('❌ Произошла ошибка при создании меню выбора');
+			if (error) await message.reply('❌ Произошла ошибка при создании меню выбора');
 		}
 	}
 });
@@ -81,10 +80,19 @@ client.on(Events.MessageCreate, async (message) => {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (interaction.isStringSelectMenu() && interaction.customId === 'selectLists') {
 		const selectedList = interaction.values[0];
-		client.userSelections = selectedList;
+
+		if (!client.userSelections) {
+			client.userSelections = new Map();
+		}
+		client.userSelections.set(interaction.user.id, selectedList);
+
+		await interaction.reply({
+			content: `✅ Вы выбрали список: **${selectedList}**`,
+			flags: MessageFlags.Ephemeral, // Только для отправителя
+		});
 	}
 
-	if (interaction.isButton() && interaction.customId === 'confirmSelection') {
+	if (interaction.isButton() && interaction.customId === 'selectConfirm') {
 		const selectedList = client.userSelections?.get(interaction.user.id);
 
 		if (!selectedList) {
@@ -99,7 +107,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		// Здесь добавить логику выбора случайного персонажа
 
 		await interaction.reply({
-			content: `✅ Вы выбрали список: **${selectedList}**`,
+			content: `✅ Фейковый запрос для таблицы: **${selectedList}**`,
 			flags: MessageFlags.Ephemeral, // Только для отправителя
 		});
 
