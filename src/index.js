@@ -103,10 +103,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		console.log(interaction);
 
 		const rndChar = await GoogleSheetsService.getRndChar(selectedList, 'B');
-		const rndADV = Math.floor(Math.random() * (ADVERBS.length - 1));
+		const rndIndx = Math.floor(Math.random() * (ADVERBS.length - 1));
 
 		await interaction.reply({
-			content: `✅ Пользовател ${interaction.user.tag} ${rndADV} нарандомил: **${rndChar}**`,
+			content: `✅ Пользовател ${interaction.user.tag} ${ADVERBS[rndIndx]} нарандомил: **${rndChar}**`,
 		});
 	}
 });
