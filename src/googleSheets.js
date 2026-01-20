@@ -15,17 +15,43 @@ const SPREADSHEET_ID = process.env.GOOGLE_SHEET;
 
 export class GoogleSheetsService {
 	// Чтение данных
-	static async readRange(range) {
+	static async getRndChar(sheetName, column, skipHeader = true) {
 		try {
-			const response = await sheets.spreadsheets.values.get({
-				spreadsheetId: SPREADSHEET_ID,
-				range,
-			});
+			// Получаем все данные столбца
+			const columnChar = this.convertToColumnLetter(column);
+			const range = `${sheetName}!${columnChar}:${columnChar}`;
 
-			return response.data.values || [];
+			const values = await this.readRange(range);
+
+			if (values.length === 0) {
+				console.warn(`Столбец ${columnChar} в листе ${sheetName} пуст`);
+				return null;
+			}
+
+			// Пропускаем заголовок если нужно
+			const startIndex = skipHeader ? 1 : 0;
+			if (startIndex >= values.length) {
+				console.warn(`Столбец ${columnChar} не содержит данных после заголовка`);
+				return null;
+			}
+
+			// Фильтруем пустые значения
+			const data = values
+				.slice(startIndex)
+				.map((row) => row[0])
+				.filter((value) => value && value.toString().trim() !== '');
+
+			if (data.length === 0) {
+				console.warn(`В столбце ${columnChar} нет заполненных значений`);
+				return null;
+			}
+
+			// Выбираем случайное значение
+			const randomIndex = Math.floor(Math.random() * data.length);
+			return data[randomIndex];
 		} catch (error) {
-			console.error('Ошибка чтения из таблицы: ', error);
-			return [];
+			console.error('Ошибка при получении случайного значения из столбца:', error);
+			return null;
 		}
 	}
 
