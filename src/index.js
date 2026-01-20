@@ -63,7 +63,7 @@ client.on(Events.MessageCreate, async (message) => {
 				.setEmoji('🎲');
 
 			// Рендер компонентов
-			const actionRow = new ActionRowBuilder().addComponents(selectMenu, button);
+			const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
 			// Слушатель события
 			await message.channel.send({
@@ -88,26 +88,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 		await interaction.reply({
 			content: `✅ Вы выбрали список: **${selectedList}**`,
-			flags: MessageFlags.Ephemeral, // Только для отправителя
-		});
-	}
-
-	if (interaction.isButton() && interaction.customId === 'selectConfirm') {
-		const selectedList = client.userSelections?.get(interaction.user.id);
-
-		if (!selectedList) {
-			await interaction.reply({
-				content: '❌ Сначала выберите список из меню!',
-				flags: MessageFlags.Ephemeral, // Только для отправителя
-			});
-
-			return;
-		}
-
-		// Здесь добавить логику выбора случайного персонажа
-
-		await interaction.reply({
-			content: `✅ Фейковый запрос для таблицы: **${selectedList}**`,
 			flags: MessageFlags.Ephemeral, // Только для отправителя
 		});
 
