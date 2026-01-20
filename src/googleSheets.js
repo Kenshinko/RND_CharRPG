@@ -10,17 +10,15 @@ const auth = new google.auth.GoogleAuth({
 // Инициализация Sheets API
 const sheets = google.sheets({ version: 'v4', auth });
 
-// ID вашей таблицы
+// ID таблицы
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET;
 
 export class GoogleSheetsService {
 	// Чтение данных
-	static async getRndChar(sheetName, column, skipHeader = true) {
+	static async getRndChar(sheetName, columnChar, skipHeader = true) {
 		try {
 			// Получаем все данные столбца
-			const columnChar = this.convertToColumnLetter(column);
 			const range = `${sheetName}!${columnChar}:${columnChar}`;
-
 			const values = await this.readRange(range);
 
 			if (values.length === 0) {
@@ -63,6 +61,20 @@ export class GoogleSheetsService {
 			});
 
 			return response.data.sheets || [];
+		} catch (error) {
+			console.error('Ошибка чтения из таблицы: ', error);
+			return [];
+		}
+	}
+
+	static async readRange(range) {
+		try {
+			const response = await sheets.spreadsheets.values.get({
+				spreadsheetId: SPREADSHEET_ID,
+				range,
+			});
+
+			return response.data.values || [];
 		} catch (error) {
 			console.error('Ошибка чтения из таблицы: ', error);
 			return [];
