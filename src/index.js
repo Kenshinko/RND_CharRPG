@@ -19,6 +19,37 @@ const client = new Client({
 	],
 });
 
+const ADVERBS = [
+	'волшебно',
+	'как крыса',
+	'люто',
+	'идеально',
+	'величественно',
+	'потужно',
+	'как не в себя',
+	'сказочно',
+	'чудесно',
+	'фантастически',
+	'магически',
+	'завораживающе',
+	'феерически',
+	'блестяще',
+	'потрясно',
+	'по кайфу',
+	'чудно',
+	'роскошно',
+	'дивно',
+	'словно лев',
+	'лоботрясно',
+	'ебано',
+	'смешно',
+	'бессмысленно',
+	'абсурдно',
+	'несуразно',
+	'дико',
+	'нелепо и неуклюже',
+];
+
 let LISTS = [];
 // ==================================================================================== //
 client.once(Events.ClientReady, async (readyClient) => {
@@ -69,24 +100,14 @@ client.on(Events.MessageCreate, async (message) => {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (interaction.isStringSelectMenu() && interaction.customId === 'selectLists') {
 		const selectedList = interaction.values[0];
-		console.log(selectedList);
+		console.log(interaction);
 
-		// if (!client.userSelections) client.userSelections = new Map();
-		// client.userSelections.set(interaction.user.id, selectedList);
-
-		// Сохраняем выбор пользователя
-		// userSelections.set(interaction.user.id, {
-		// 	list: selectedList,
-		// 	timestamp: Date.now(),
-		// });
-
-		console.log(`Пользователь ${interaction.user.tag} выбрал список: ${selectedList}`);
+		const rndChar = await GoogleSheetsService.getRndChar(selectedList, 'B');
+		const rndADV = Math.floor(Math.random() * (ADVERBS.length - 1));
 
 		await interaction.reply({
-			content: `✅ Пользователь ${interaction.user.tag} выбрал список: **${selectedList}**`,
+			content: `✅ Пользовател ${interaction.user.tag} ${rndADV} нарандомил: **${rndChar}**`,
 		});
-
-		client.userSelections?.delete(interaction.user.id);
 	}
 });
 // ==================================================================================== //
