@@ -4,6 +4,8 @@ import {
 	EmbedBuilder,
 	Events,
 	GatewayIntentBits,
+	REST,
+	Routes,
 	SlashCommandBuilder,
 	StringSelectMenuBuilder,
 } from 'discord.js';
@@ -11,6 +13,9 @@ import 'dotenv/config';
 import { GoogleSheetsService } from './googleSheets.js';
 
 const TOKEN = process.env.DISCORD_TOKEN;
+const CLIENT_ID = process.env.CLIENT_ID;
+
+const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 const client = new Client({
 	intents: [
@@ -68,19 +73,20 @@ let LISTS = [];
 const commands = [
 	new SlashCommandBuilder().setName('rnd').setDescription('Нарандомить персонажа'),
 ];
-
-// Регистрируем команды
-await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-	body: commands.map((command) => command.toJSON()),
-});
 // ==================================================================================== //
-client.once(Events.ClientReady, async (readyClient) => {
+client.once(Events.ClientReady, async () => {
 	try {
+		// Регистрируем команды
+		await rest.put(Routes.applicationCommands(CLIENT_ID), {
+			body: commands.map((command) => command.toJSON()),
+		});
+
+		// Получаем названия списков
 		const data = await GoogleSheetsService.getLists();
 		LISTS = data.map(({ properties }) => {
 			return { id: properties.sheetId, label: properties.title, value: properties.title };
 		});
-		console.log('Ready to work.');
+		console.log('==> Ready to work...');
 	} catch (error) {
 		console.error(error);
 	}
