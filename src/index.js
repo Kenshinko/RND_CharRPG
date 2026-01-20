@@ -106,7 +106,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		const rndIndx = Math.floor(Math.random() * (ADVERBS.length - 1));
 
 		await interaction.reply({
-			content: `✅ Пользовател ${interaction.user.tag} ${ADVERBS[rndIndx]} нарандомил: **${rndChar}**`,
+			content: `✅ Пользователь ${interaction.user.globalName} ${ADVERBS[rndIndx]} нарандомил: **${rndChar}**`,
 		});
 	}
 });
