@@ -1,6 +1,7 @@
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
+	ButtonStyle,
 	Client,
 	EmbedBuilder,
 	Events,
@@ -27,7 +28,7 @@ client.once(Events.ClientReady, async (readyClient) => {
 	try {
 		const data = await GoogleSheetsService.getLists();
 		const result = data.map(({ properties }) => {
-			return { id: properties.sheetId, name: properties.title };
+			return { id: properties.sheetId, label: properties.title, value: properties.title };
 		});
 
 		LISTS = [...result];
