@@ -64,11 +64,15 @@ const ADVERBS = [
 
 let LISTS = [];
 // ==================================================================================== //
-
-// Регистрация команд бота
+// Инициализация команд бота
 const commands = [
 	new SlashCommandBuilder().setName('rnd').setDescription('Нарандомить персонажа'),
 ];
+
+// Регистрируем команды
+await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+	body: commands.map((command) => command.toJSON()),
+});
 // ==================================================================================== //
 client.once(Events.ClientReady, async (readyClient) => {
 	try {
