@@ -84,7 +84,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 		await interaction.reply({
 			content: `✅ Пользователь ${interaction.user.tag} выбрал список: **${selectedList}**`,
-			flags: MessageFlags.Ephemeral, // Только для отправителя
 		});
 
 		client.userSelections?.delete(interaction.user.id);
