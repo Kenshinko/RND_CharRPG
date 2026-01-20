@@ -48,6 +48,7 @@ const ADVERBS = [
 	'несуразно',
 	'дико',
 	'нелепо и неуклюже',
+	'пошурику',
 ];
 
 let LISTS = [];
@@ -100,13 +101,13 @@ client.on(Events.MessageCreate, async (message) => {
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (interaction.isStringSelectMenu() && interaction.customId === 'selectLists') {
 		const selectedList = interaction.values[0];
-		console.log(interaction);
 
+		console.log(interaction.user);
 		const rndChar = await GoogleSheetsService.getRndChar(selectedList, 'B');
 		const rndIndx = Math.floor(Math.random() * (ADVERBS.length - 1));
 
 		await interaction.reply({
-			content: `✅ Пользователь ${interaction.user.globalName} ${ADVERBS[rndIndx]} нарандомил: **${rndChar}**`,
+			content: `✅ Пользователь ${interaction.user.globalName} ${ADVERBS[rndIndx]} нарандомил:\n**${rndChar}**`,
 		});
 	}
 });
