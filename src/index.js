@@ -27,11 +27,10 @@ client.once(Events.ClientReady, async (readyClient) => {
 	console.log('Привет');
 	try {
 		const data = await GoogleSheetsService.getLists();
-		const result = data.map(({ properties }) => {
+		LISTS = data.map(({ properties }) => {
 			return { id: properties.sheetId, label: properties.title, value: properties.title };
 		});
 
-		LISTS = [...result];
 		console.log(LISTS);
 	} catch (error) {
 		console.log(error);
@@ -71,7 +70,6 @@ client.on(Events.MessageCreate, async (message) => {
 				components: [actionRow],
 			});
 		} catch (error) {
-			console.error('Ошибка отправки сообщения: ', error);
 			if (error) await message.reply('❌ Произошла ошибка при создании меню выбора');
 		}
 	}
@@ -79,15 +77,22 @@ client.on(Events.MessageCreate, async (message) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (interaction.isStringSelectMenu() && interaction.customId === 'selectLists') {
+		console.log(interaction);
 		const selectedList = interaction.values[0];
 
-		if (!client.userSelections) {
-			client.userSelections = new Map();
-		}
-		client.userSelections.set(interaction.user.id, selectedList);
+		// if (!client.userSelections) client.userSelections = new Map();
+		// client.userSelections.set(interaction.user.id, selectedList);
+
+		// Сохраняем выбор пользователя
+		userSelections.set(interaction.user.id, {
+			list: selectedList,
+			timestamp: Date.now(),
+		});
+
+		console.log(`Пользователь ${interaction.user.tag} выбрал список: ${selectedList}`);
 
 		await interaction.reply({
-			content: `✅ Вы выбрали список: **${selectedList}**`,
+			content: `✅ Пользователь ${interaction.user.tag} выбрал список: **${selectedList}**`,
 			flags: MessageFlags.Ephemeral, // Только для отправителя
 		});
 
