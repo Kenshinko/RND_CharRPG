@@ -32,7 +32,7 @@ const ADVERBS = [
 	'фантастически',
 	'магически',
 	'завораживающе',
-	'феерически',
+	'феерично',
 	'блестяще',
 	'потрясно',
 	'по кайфу',
@@ -54,16 +54,14 @@ const ADVERBS = [
 let LISTS = [];
 // ==================================================================================== //
 client.once(Events.ClientReady, async (readyClient) => {
-	console.log('Привет');
 	try {
 		const data = await GoogleSheetsService.getLists();
 		LISTS = data.map(({ properties }) => {
 			return { id: properties.sheetId, label: properties.title, value: properties.title };
 		});
-
-		console.log(LISTS);
+		console.log('Ready to work.');
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 	}
 });
 
@@ -107,7 +105,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		const rndIndx = Math.floor(Math.random() * (ADVERBS.length - 1));
 
 		await interaction.reply({
-			content: `✅ Пользователь ${interaction.user.globalName} ${ADVERBS[rndIndx]} нарандомил:\n**${rndChar}**`,
+			content: `Пользователь ${interaction.user.globalName} ${ADVERBS[rndIndx]} нарандомил:\n**${rndChar}**`,
 		});
 	}
 });
