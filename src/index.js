@@ -1,7 +1,5 @@
 import {
 	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonStyle,
 	Client,
 	EmbedBuilder,
 	Events,
@@ -45,7 +43,7 @@ client.on(Events.MessageCreate, async (message) => {
 			// Текстовое окно
 			const rndEmbed = new EmbedBuilder()
 				.setColor(0x0099ff)
-				.setTitle('🌟 Выбор списка')
+				.setTitle('🎲 Выбор списка')
 				.setDescription('Выберите список, из которого случайно будет выбран персонаж.');
 
 			// Выпадающий список элеметов
@@ -53,13 +51,6 @@ client.on(Events.MessageCreate, async (message) => {
 				.setCustomId('selectLists')
 				.setPlaceholder('Выберите список...')
 				.addOptions(LISTS);
-
-			// Кнопка подтверждения
-			const button = new ButtonBuilder()
-				.setCustomId('selectConfirm')
-				.setLabel('ОК')
-				.setStyle(ButtonStyle.Primary)
-				.setEmoji('🎲');
 
 			// Рендер компонентов
 			const actionRow = new ActionRowBuilder().addComponents(selectMenu);
@@ -77,17 +68,17 @@ client.on(Events.MessageCreate, async (message) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (interaction.isStringSelectMenu() && interaction.customId === 'selectLists') {
-		console.log(interaction);
 		const selectedList = interaction.values[0];
+		console.log(selectedList);
 
 		// if (!client.userSelections) client.userSelections = new Map();
 		// client.userSelections.set(interaction.user.id, selectedList);
 
 		// Сохраняем выбор пользователя
-		userSelections.set(interaction.user.id, {
-			list: selectedList,
-			timestamp: Date.now(),
-		});
+		// userSelections.set(interaction.user.id, {
+		// 	list: selectedList,
+		// 	timestamp: Date.now(),
+		// });
 
 		console.log(`Пользователь ${interaction.user.tag} выбрал список: ${selectedList}`);
 
