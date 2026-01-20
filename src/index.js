@@ -86,10 +86,25 @@ client.on(Events.MessageCreate, async (message) => {
 			const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
 			// Слушатель события
-			await message.channel.send({
+			// await message.channel.send({
+			// 	embeds: [rndEmbed],
+			// 	components: [actionRow],
+			// });
+
+			// Отправляем и сохраняем сообщение для удаления
+			const sentMessage = await message.channel.send({
 				embeds: [rndEmbed],
 				components: [actionRow],
 			});
+
+			// Удаляем генератор через 5 минут
+			setTimeout(async () => {
+				try {
+					await sentMessage.delete();
+				} catch (error) {
+					console.error('Не удалось удалить сообщение: ', error);
+				}
+			}, 300000);
 		} catch (error) {
 			if (error) await message.reply('❌ Произошла ошибка при создании меню выбора');
 		}
@@ -100,13 +115,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (interaction.isStringSelectMenu() && interaction.customId === 'selectLists') {
 		const selectedList = interaction.values[0];
 
-		console.log(interaction.user);
 		const rndChar = await GoogleSheetsService.getRndChar(selectedList, 'B');
 		const rndIndx = Math.floor(Math.random() * (ADVERBS.length - 1));
 
 		await interaction.reply({
-			content: `Пользователь ${interaction.user.globalName} ${ADVERBS[rndIndx]} нарандомил:\n**${rndChar}**`,
+			content: `Пользователь ${interaction.user.globalName} ${ADVERBS[rndIndx]} нарандомил:\n**${rndChar}** из списка ${selectedList}`,
 		});
+
+		setTimeout(async () => {
+			if (selectedList) interaction.values.pop();
+		}, 5000);
 	}
 });
 // ==================================================================================== //
