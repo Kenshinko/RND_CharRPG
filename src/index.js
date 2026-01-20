@@ -4,6 +4,7 @@ import {
 	EmbedBuilder,
 	Events,
 	GatewayIntentBits,
+	SlashCommandBuilder,
 	StringSelectMenuBuilder,
 } from 'discord.js';
 import 'dotenv/config';
@@ -26,14 +27,17 @@ const ADVERBS = [
 	'идеально',
 	'величественно',
 	'потужно',
+	'кучерчяво',
 	'как не в себя',
 	'сказочно',
 	'чудесно',
 	'фантастически',
+	'красиво',
 	'магически',
 	'завораживающе',
 	'феерично',
 	'блестяще',
+	'изумительно',
 	'потрясно',
 	'по кайфу',
 	'чудно',
@@ -48,10 +52,23 @@ const ADVERBS = [
 	'несуразно',
 	'дико',
 	'нелепо и неуклюже',
+	'предательски',
+	'коварно',
+	'подло',
+	'бесчестно',
+	'впопыхах',
+	'злодейски',
+	'бессовестно',
 	'пошурику',
 ];
 
 let LISTS = [];
+// ==================================================================================== //
+
+// Регистрация команд бота
+const commands = [
+	new SlashCommandBuilder().setName('rnd').setDescription('Нарандомить персонажа'),
+];
 // ==================================================================================== //
 client.once(Events.ClientReady, async (readyClient) => {
 	try {
@@ -65,10 +82,13 @@ client.once(Events.ClientReady, async (readyClient) => {
 	}
 });
 
-client.on(Events.MessageCreate, async (message) => {
-	if (message.author.bot) return;
+// client.on(Events.MessageCreate, async (message) => {
+client.on(Events.InteractionCreate, async (interaction) => {
+	// if (message.author.bot) return;
+	if (!interaction.isChatInputCommand()) return;
 
-	if (message.content === '/rnd') {
+	// if (message.content === '/rnd') {
+	if (interaction.commandName === 'rnd') {
 		try {
 			// Текстовое окно
 			const rndEmbed = new EmbedBuilder()
@@ -85,14 +105,8 @@ client.on(Events.MessageCreate, async (message) => {
 			// Рендер компонентов
 			const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
-			// Слушатель события
-			// await message.channel.send({
-			// 	embeds: [rndEmbed],
-			// 	components: [actionRow],
-			// });
-
 			// Отправляем и сохраняем сообщение для удаления
-			const sentMessage = await message.channel.send({
+			const sentMessage = await interaction.channel.send({
 				embeds: [rndEmbed],
 				components: [actionRow],
 			});
@@ -106,7 +120,7 @@ client.on(Events.MessageCreate, async (message) => {
 				}
 			}, 300000);
 		} catch (error) {
-			if (error) await message.reply('❌ Произошла ошибка при создании меню выбора');
+			if (error) await interaction.reply('❌ Произошла ошибка при создании меню выбора');
 		}
 	}
 });
@@ -121,10 +135,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 		await interaction.reply({
 			content: `Пользователь ${interaction.user.globalName} ${ADVERBS[rndIndx]} нарандомил:\n**${rndChar}** из списка ${selectedList}`,
 		});
-
-		setTimeout(async () => {
-			if (selectedList) interaction.values.pop();
-		}, 5000);
 	}
 });
 // ==================================================================================== //
