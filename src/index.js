@@ -4,6 +4,7 @@ import {
 	EmbedBuilder,
 	Events,
 	GatewayIntentBits,
+	MessageFlags,
 	REST,
 	Routes,
 	SlashCommandBuilder,
@@ -97,7 +98,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (interaction.commandName === 'rnd') {
 		try {
-			await interaction.reply({ ephemeral: true });
+			await interaction.reply({ flags: MessageFlags.Ephemeral });
 			// Текстовое окно
 			const rndEmbed = new EmbedBuilder()
 				.setColor(0x0099ff)
