@@ -4,6 +4,7 @@ import {
 	EmbedBuilder,
 	Events,
 	GatewayIntentBits,
+	MessageFlags,
 	REST,
 	Routes,
 	SlashCommandBuilder,
@@ -32,7 +33,7 @@ const ADVERBS = [
 	'идеально',
 	'величественно',
 	'потужно',
-	'кучерчяво',
+	'кучеряво',
 	'как не в себя',
 	'сказочно',
 	'чудесно',
@@ -108,8 +109,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (interaction.commandName === 'rnd') {
 		try {
-			// await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-			await interaction.deferUpdate();
+			await interaction.deferReply({
+				flags: MessageFlags.Ephemeral,
+				withResponse: false,
+			});
 			// Текстовое окно
 			const rndEmbed = new EmbedBuilder()
 				.setColor(0x0099ff)
