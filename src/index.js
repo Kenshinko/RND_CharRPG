@@ -98,7 +98,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (interaction.commandName === 'rnd') {
 		try {
-			await interaction.reply({ flags: MessageFlags.Ephemeral });
+			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 			// Текстовое окно
 			const rndEmbed = new EmbedBuilder()
 				.setColor(0x0099ff)
