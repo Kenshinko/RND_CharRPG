@@ -78,7 +78,7 @@ client.once(Events.ClientReady, async () => {
 	try {
 		// Регистрируем команды
 		await rest.put(Routes.applicationCommands(CLIENT_ID), {
-			body: commands.map((command) => command.toJSON()),
+			body: commands,
 		});
 
 		// Получаем названия списков
