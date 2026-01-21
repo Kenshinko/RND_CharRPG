@@ -4,7 +4,6 @@ import {
 	EmbedBuilder,
 	Events,
 	GatewayIntentBits,
-	MessageFlags,
 	REST,
 	Routes,
 	SlashCommandBuilder,
@@ -109,7 +108,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 	if (interaction.commandName === 'rnd') {
 		try {
-			await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+			// await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+			await interaction.deferUpdate();
 			// Текстовое окно
 			const rndEmbed = new EmbedBuilder()
 				.setColor(0x0099ff)
@@ -126,16 +126,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			const actionRow = new ActionRowBuilder().addComponents(selectMenu);
 
 			// Отправляем и сохраняем сообщение для удаления
-			const sentMessage = await interaction.channel.send({
+			const sendMessage = await interaction.channel.send({
 				embeds: [rndEmbed],
 				components: [actionRow],
 			});
 
-			await interaction.deeteReply();
 			// Удаляем генератор через 5 минут
 			setTimeout(async () => {
 				try {
-					await sentMessage.delete();
+					await sendMessage.delete();
 				} catch (error) {
 					console.error('Не удалось удалить сообщение: ', error);
 				}
