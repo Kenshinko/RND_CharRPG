@@ -92,14 +92,12 @@ client.once(Events.ClientReady, async () => {
 	}
 });
 
-// client.on(Events.MessageCreate, async (message) => {
 client.on(Events.InteractionCreate, async (interaction) => {
-	// if (message.author.bot) return;
 	if (!interaction.isChatInputCommand()) return;
 
-	// if (message.content === '/rnd') {
 	if (interaction.commandName === 'rnd') {
 		try {
+			await interaction.reply({ ephemeral: true });
 			// Текстовое окно
 			const rndEmbed = new EmbedBuilder()
 				.setColor(0x0099ff)
