@@ -4,6 +4,7 @@ import {
 	EmbedBuilder,
 	Events,
 	GatewayIntentBits,
+	MessageFlags,
 	REST,
 	Routes,
 	SlashCommandBuilder,
